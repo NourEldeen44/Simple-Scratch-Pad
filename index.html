@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simple Scratch pad">
+    <title>Scratch Pad</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+        :root {
+            --main-color: #4b00ff;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            transition: 150ms;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            background: #ececec;
+            overflow: hidden;
+        }
+
+        .flex-row {
+            display: flex;
+            position: relative;
+        }
+
+        .wrapper {
+            border: 1px solid var(--main-color);
+            width: 50vw;
+            height: 30vw;
+        }
+
+        canvas#signature-pad {
+            background: #fff;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        button#clear {
+            position: absolute;
+            top: 15px;
+            left: 0%;
+            transform: translateX(-50%);
+            background: white;
+            border: 1px solid var(--main-color);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        button#clear span {
+            /* transform: rotate(90deg); */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 25px;
+            width: 25px;
+            padding: 7px;
+        }
+
+        .color-btns {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 30%;
+            height: 50%;
+            flex-direction: column;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .color-btns button {
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            border-left: 1px solid transparent;
+            border-right: 1px solid var(--main-color);
+            border-top: 1px solid var(--main-color);
+            border-bottom: 1px solid transparent;
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        .color-btns button:hover {
+            transform: scale(1.2) rotate(45deg);
+        }
+
+        .color-btns .blue-smooth {
+            background-color: rgb(66, 133, 244);
+        }
+
+        .color-btns .red-smooth {
+            background-color: #e91e63;
+        }
+
+        .color-btns .green-smooth {
+            background-color: #4caf50;
+        }
+
+        .color-btns .dark-smooth {
+            background-color: #38454c;
+        }
+
+        .size-btns {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 40%;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateY(50%) translateX(-50%);
+        }
+
+        .size-btns button {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--main-color);
+            border-radius: 8px;
+            color: var(--main-color);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .size-btns button:hover {
+            transform: scale(1.2);
+        }
+
+        .state-view {
+            width: 15%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateY(20%) translateX(-50%);
+        }
+
+        #color-view {
+            width: 25px;
+            height: 25px;
+            background-color: rgb(66, 133, 244);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        #size-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--main-color);
+            border-radius: 8px;
+            color: var(--main-color);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .download {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            border: var(--main-color) 2px solid;
+            border-radius: 50%;
+        }
+
+        .add-img {
+            position: absolute;
+            top: 70px;
+            left: 0%;
+            transform: translateX(-50%);
+        }
+
+        .add-img:hover {
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        .add-img:hover .tooltiptext {
+            visibility: visible;
+
+        }
+
+        .add-img .tooltiptext {
+            position: absolute;
+            top: -5px;
+            left: 105%;
+            visibility: hidden;
+            font-size: 8px;
+            font-weight: bold;
+            color: gray;
+        }
+
+        .add-img input {
+            display: none;
+        }
+
+        .add-img input::-webkit-file-upload-button {
+            display: none;
+        }
+
+        .add-img label {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-img label img {
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width:992px) {
+            .wrapper {
+                width: 80vw;
+                height: 65vw;
+            }
+
+
+        }
+
+        @media screen and (max-width:667px) {
+            .wrapper {
+                width: 90vw;
+                height: 80vw;
+            }
+        }
+
+        @media screen and (max-width:500px) {
+            .wrapper {
+                width: 75vw;
+                height: 80vh;
+            }
+
+            .size-btns {
+                width: 70%;
+            }
+
+            .state-view {
+                width: 40%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex-row">
+        <div class="state-view">
+            <div id="color-view"></div>
+            <div id="size-view">X0.5</div>
+        </div>
+        <div class="wrapper">
+            <canvas id="signature-pad"></canvas>
+        </div>
+        <div class="dash-board-btns">
+            <button id="clear"><span>
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+                    <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                    <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 482.428 482.429"
+                        style="enable-background:new 0 0 482.428 482.429;" xml:space="preserve">
+                        <g>
+                            <g>
+                                <path d="M381.163,57.799h-75.094C302.323,25.316,274.686,0,241.214,0c-33.471,0-61.104,25.315-64.85,57.799h-75.098
+                            c-30.39,0-55.111,24.728-55.111,55.117v2.828c0,23.223,14.46,43.1,34.83,51.199v260.369c0,30.39,24.724,55.117,55.112,55.117
+                            h210.236c30.389,0,55.111-24.729,55.111-55.117V166.944c20.369-8.1,34.83-27.977,34.83-51.199v-2.828
+                            C436.274,82.527,411.551,57.799,381.163,57.799z M241.214,26.139c19.037,0,34.927,13.645,38.443,31.66h-76.879
+                            C206.293,39.783,222.184,26.139,241.214,26.139z M375.305,427.312c0,15.978-13,28.979-28.973,28.979H136.096
+                            c-15.973,0-28.973-13.002-28.973-28.979V170.861h268.182V427.312z M410.135,115.744c0,15.978-13,28.979-28.973,28.979H101.266
+                            c-15.973,0-28.973-13.001-28.973-28.979v-2.828c0-15.978,13-28.979,28.973-28.979h279.897c15.973,0,28.973,13.001,28.973,28.979
+                            V115.744z" />
+                                <path
+                                    d="M171.144,422.863c7.218,0,13.069-5.853,13.069-13.068V262.641c0-7.216-5.852-13.07-13.069-13.07
+                            c-7.217,0-13.069,5.854-13.069,13.07v147.154C158.074,417.012,163.926,422.863,171.144,422.863z" />
+                                <path
+                                    d="M241.214,422.863c7.218,0,13.07-5.853,13.07-13.068V262.641c0-7.216-5.854-13.07-13.07-13.07
+                            c-7.217,0-13.069,5.854-13.069,13.07v147.154C228.145,417.012,233.996,422.863,241.214,422.863z" />
+                                <path
+                                    d="M311.284,422.863c7.217,0,13.068-5.853,13.068-13.068V262.641c0-7.216-5.852-13.07-13.068-13.07
+                            c-7.219,0-13.07,5.854-13.07,13.07v147.154C298.213,417.012,304.067,422.863,311.284,422.863z" />
+                            </g>
+                        </g>
+                    </svg>
+                </span></button>
+            <div class="add-img">
+                <input type="file" name="add-img" id="add-img-input">
+                <label for="add-img-input"><img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Circle-icons-image.svg/1024px-Circle-icons-image.svg.png"
+                        alt="...">
+                    <span class="tooltiptext">Add Background Image</span>
+                </label>
+            </div>
+            <div class="color-btns">
+                <button onclick="changeColor('rgb(66, 133, 244)')" class="blue-smooth"></button>
+                <button onclick="changeColor('#e91e63')" class="red-smooth"></button>
+                <button onclick="changeColor('#4caf50')" class="green-smooth"></button>
+                <button onclick="changeColor('#38454c')" class="dark-smooth"></button>
+            </div>
+            <div class="size-btns">
+                <button onclick="changeSize(.5)">X0.5</button>
+                <button onclick="changeSize(1)">X1</button>
+                <button onclick="changeSize(2)">X2</button>
+                <button onclick="changeSize(3)">X3</button>
+            </div>
+            <div class="download"><a href="" download id="download-link">
+                    <span>
+                        <?xml version="1.0" encoding="iso-8859-1"?>
+                        <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
+                            style="enable-background:new 0 0 512 512; width: 35px; height: 35px;" xml:space="preserve">
+                            <path style="fill:transparent;" d="M342.519,366.324h-53.378V43.339c0-18.274-14.867-33.14-33.141-33.14s-33.141,14.866-33.141,33.14
+                            v322.984H169.48c-13.519,0-24.479,10.959-24.479,24.479l0,0c0,6.492,2.579,12.718,7.17,17.309l86.519,86.519
+                            c4.623,4.623,10.771,7.17,17.31,7.17c6.539,0,12.687-2.547,17.31-7.171l86.519-86.518c4.591-4.591,7.17-10.817,7.17-17.309
+                            C366.998,377.284,356.039,366.324,342.519,366.324z" />
+                            <g>
+                                <path style="fill:#4b00ff;" d="M256,512c-9.264,0-17.973-3.607-24.523-10.158l-86.518-86.518
+                                c-6.55-6.55-10.156-15.258-10.156-24.522c0-19.121,15.557-34.677,34.678-34.677h43.178V43.339C212.66,19.443,232.101,0,256,0
+                                s43.34,19.443,43.34,43.339v312.785h43.178c19.121,0,34.678,15.557,34.678,34.678c0,9.262-3.606,17.97-10.155,24.521l-86.52,86.519
+                                C273.973,508.393,265.264,512,256,512z M169.481,376.523c-7.874,0-14.28,6.405-14.28,14.279c0,3.814,1.485,7.402,4.183,10.097
+                                l86.519,86.519c2.698,2.699,6.283,4.184,10.097,4.184c3.814,0,7.401-1.485,10.096-4.183l86.52-86.519
+                                c2.698-2.698,4.183-6.284,4.183-10.097c0-7.874-6.406-14.28-14.28-14.28h-53.378c-5.632,0-10.199-4.567-10.199-10.199V43.339
+                                c0-12.649-10.292-22.941-22.942-22.941c-12.65,0-22.942,10.292-22.942,22.941v322.984c0,5.632-4.567,10.199-10.199,10.199H169.481z
+                                " />
+                                <path style="fill:#4b00ff;" d="M310.957,426.668c-2.611,0-5.22-0.996-7.212-2.987c-3.983-3.983-3.983-10.441,0-14.425l1.494-1.494
+                                c3.984-3.982,10.44-3.982,14.425,0c3.983,3.983,3.983,10.441,0,14.425l-1.494,1.494
+                                C316.177,425.672,313.567,426.668,310.957,426.668z" />
+                                <path style="fill:#4b00ff;" d="M257.02,480.606c-2.611,0-5.22-0.996-7.212-2.987c-3.983-3.983-3.983-10.441,0-14.425L281,432.003
+                                c3.986-3.982,10.442-3.981,14.425,0c3.983,3.983,3.983,10.441,0,14.425l-31.192,31.191
+                                C262.24,479.609,259.63,480.606,257.02,480.606z" />
+                            </g>
+                        </svg>
+
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.9/dist/signature_pad.umd.min.js"></script>
+<script>
+    var canvas = document.getElementById("signature-pad");
+    var colorView = document.getElementById("color-view");
+    var sizeView = document.getElementById("size-view");
+    var downloadLink = document.getElementById("download-link");
+    var addImageInput = document.getElementById("add-img-input");
+
+    function resizeCanvas() {
+        var ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+    }
+    window.onresize = resizeCanvas;
+    resizeCanvas();
+
+    var signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgb(250,250,250)',
+        penColor: "rgb(66, 133, 244)",
+        minWidth: .5,
+        maxWidth: 2.5,
+    });
+    setNewImage();
+    // function toDataURL(src, callback) {
+    //     var image = new Image();
+    //     image.crossOrigin = 'Anonymous';
+    //     image.onload = function () {
+    //         var canvas = document.createElement('canvas');
+    //         var context = canvas.getContext('2d');
+    //         canvas.height = this.naturalHeight;
+    //         canvas.width = this.naturalWidth;
+    //         context.drawImage(this, 0, 0);
+    //         var dataURL = canvas.toDataURL('image/jpeg');
+    //         callback(dataURL);
+    //     };
+    //     image.src = src;
+    // }
+
+    function changeColor(color) {
+        signaturePad.penColor = color;
+        colorView.style.backgroundColor = color;
+    }
+    function changeSize(size) {
+        signaturePad.minWidth = size;
+        signaturePad.maxWidth = size * 5;
+        sizeView.innerText = `X${size}`
+    }
+    function setNewImage() {
+        var imgData = signaturePad.toDataURL("image/jpeg");
+        downloadLink.setAttribute("href", imgData)
+    }
+    document.getElementById("clear").addEventListener('click', function () {
+        signaturePad.clear();
+    })
+    addImageInput.addEventListener('change', function (event) {
+        var fr = new FileReader();
+        var slctdImg = event.target.files[0];
+        fr.readAsDataURL(slctdImg)
+        fr.onload = function () {
+            signaturePad.fromDataURL(fr.result);
+            downloadLink.setAttribute("href", fr.result)
+        }
+    })
+    canvas.addEventListener('mousemove', function () {
+        setNewImage()
+    })
+</script>
+
+</html>
